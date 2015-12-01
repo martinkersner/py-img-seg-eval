@@ -6,8 +6,6 @@ Martin Kersner, m.kersner@gmail.com
 
 Evaluation metrics for image segmentation inspired by
 paper Fully Convolutional Networks for Semantic Segmentation.
-
-TODO frequency weighted IU
 '''
 
 import numpy as np
@@ -15,8 +13,6 @@ import numpy as np
 def pixel_accuracy(eval_segm, gt_segm):
     '''
     sum_i(n_ii) / sum_i(t_i)
-    pixel_accuracy() does not consider classes which are not included in ground 
-    truth segmentation.
     '''
 
     check_size(eval_segm, gt_segm)
@@ -44,8 +40,6 @@ def pixel_accuracy(eval_segm, gt_segm):
 def mean_accuracy(eval_segm, gt_segm):
     '''
     (1/n_cl) sum_i(n_ii/t_i)
-    mean_accuracy() does not consider classes which are not included in ground 
-    truth segmentation.
     '''
 
     check_size(eval_segm, gt_segm)
@@ -71,7 +65,6 @@ def mean_accuracy(eval_segm, gt_segm):
 def mean_IU(eval_segm, gt_segm):
     '''
     (1/n_cl) * sum_i(n_ii / (t_i + sum_j(n_ji) - n_ii))
-    Superfluous class in segmentation is treated the same way as not found class.
     '''
 
     check_size(eval_segm, gt_segm)
@@ -101,11 +94,38 @@ def frequency_weighted_UI(eval_segm, gt_segm):
     '''
     sum_k(t_k)^(-1) * sum_i((t_i*n_ii)/(t_i + sum_j(n_ji) - n_ii))
     '''
-    pass
+
+    check_size(eval_segm, gt_segm)
+
+    cl, n_cl = union_classes(eval_segm, gt_segm)
+    eval_mask, gt_mask = extract_both_masks(eval_segm, gt_segm, cl, n_cl)
+
+    frequency_weighted_UI_ = list([0]) * n_cl
+
+    for i, c in enumerate(cl):
+        curr_eval_mask = eval_mask[i, :, :]
+        curr_gt_mask = gt_mask[i, :, :]
+ 
+        if (np.sum(curr_eval_mask) == 0) or (np.sum(curr_gt_mask) == 0):
+            continue
+
+        n_ii = np.sum(np.logical_and(curr_eval_mask, curr_gt_mask))
+        t_i  = np.sum(curr_gt_mask)
+        n_ij = np.sum(curr_eval_mask)
+
+        frequency_weighted_UI_[i] = (t_i * n_ii) / (t_i + n_ij - n_ii)
+ 
+    sum_k_t_k = get_pixel_area(eval_segm)
+    
+    frequency_weighted_UI_ = np.sum(frequency_weighted_UI_) / sum_k_t_k
+    return frequency_weighted_UI_
 
 '''
 Auxiliary functions used during evaluation.
 '''
+def get_pixel_area(segm):
+    return segm.shape[0] * segm.shape[1]
+
 def extract_both_masks(eval_segm, gt_segm, cl, n_cl):
     eval_mask = extract_masks(eval_segm, cl, n_cl)
     gt_mask   = extract_masks(gt_segm, cl, n_cl)
