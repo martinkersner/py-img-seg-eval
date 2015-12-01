@@ -41,9 +41,11 @@ def pixel_accuracy(eval_segm, gt_segm):
 
     return pixel_accuracy_
 
-def mean_accuracy():
+def mean_accuracy(eval_segm, gt_segm):
     '''
     (1/n_cl) sum_i(n_ii/t_i)
+    mean_accuracy() does not consider classes which are not included in ground 
+    truth segmentation.
     '''
 
     check_size(eval_segm, gt_segm)
@@ -60,8 +62,8 @@ def mean_accuracy():
         n_ii = np.sum(np.logical_and(curr_eval_mask, curr_gt_mask))
         t_i  = np.sum(curr_gt_mask)
  
-    if (t_i != 0):
-        accuracy[i] = n_ii / t_i
+        if (t_i != 0):
+            accuracy[i] = n_ii / t_i
 
     mean_accuracy_ = np.mean(accuracy)
     return mean_accuracy_
