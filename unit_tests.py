@@ -204,7 +204,7 @@ class mean_IU_UnitTests(unittest.TestCase):
         gt   = np.array([[0,0,0,0,0], [0,0,0,0,0]])
 
         res = es.mean_IU(segm, gt)
-        self.assertEqual(res, np.mean([0.9, 0]))
+        self.assertEqual(res, np.mean([0.9]))
 
     def testTwoClasses2(self):
         segm = np.array([[0,0,0,0,0], [0,0,0,0,0]])
@@ -225,28 +225,28 @@ class mean_IU_UnitTests(unittest.TestCase):
         gt   = np.array([[1,0,0,0,0], [0,0,0,0,0]])
 
         res = es.mean_IU(segm, gt)
-        self.assertEqual(res, np.mean([8.0/10.0, 0, 0]))
+        self.assertEqual(res, np.mean([8.0/10.0, 0]))
 
     def testFourClasses0(self):
         segm = np.array([[0,2,3,0,0], [0,0,0,0,0]])
         gt   = np.array([[1,0,0,0,0], [0,0,0,0,0]])
 
         res = es.mean_IU(segm, gt)
-        self.assertEqual(res, np.mean([7.0/10.0, 0, 0, 0]))
+        self.assertEqual(res, np.mean([7.0/10.0, 0]))
 
     def testFourClasses1(self):
         segm = np.array([[1,2,3,0,0], [0,0,0,0,0]])
         gt   = np.array([[1,0,0,0,0], [0,0,0,0,0]])
 
         res = es.mean_IU(segm, gt)
-        self.assertEqual(res, np.mean([7.0/9.0, 1, 0, 0]))
+        self.assertEqual(res, np.mean([7.0/9.0, 1]))
 
     def testFiveClasses0(self):
         segm = np.array([[1,2,3,4,3], [0,0,0,0,0]])
         gt   = np.array([[1,0,3,0,0], [0,0,0,0,0]])
 
         res = es.mean_IU(segm, gt)
-        self.assertEqual(res, np.mean([5.0/8.0, 1, 0, 1.0/2.0, 0]))
+        self.assertEqual(res, np.mean([5.0/8.0, 1, 1.0/2.0]))
 
 class frequency_weighted_IU_UnitTests(unittest.TestCase):
     '''
