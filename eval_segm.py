@@ -91,7 +91,7 @@ def mean_IU(eval_segm, gt_segm):
     mean_IU_ = np.sum(IU) / n_cl_gt
     return mean_IU_
 
-def frequency_weighted_UI(eval_segm, gt_segm):
+def frequency_weighted_IU(eval_segm, gt_segm):
     '''
     sum_k(t_k)^(-1) * sum_i((t_i*n_ii)/(t_i + sum_j(n_ji) - n_ii))
     '''
@@ -101,7 +101,7 @@ def frequency_weighted_UI(eval_segm, gt_segm):
     cl, n_cl = union_classes(eval_segm, gt_segm)
     eval_mask, gt_mask = extract_both_masks(eval_segm, gt_segm, cl, n_cl)
 
-    frequency_weighted_UI_ = list([0]) * n_cl
+    frequency_weighted_IU_ = list([0]) * n_cl
 
     for i, c in enumerate(cl):
         curr_eval_mask = eval_mask[i, :, :]
@@ -114,12 +114,12 @@ def frequency_weighted_UI(eval_segm, gt_segm):
         t_i  = np.sum(curr_gt_mask)
         n_ij = np.sum(curr_eval_mask)
 
-        frequency_weighted_UI_[i] = (t_i * n_ii) / (t_i + n_ij - n_ii)
+        frequency_weighted_IU_[i] = (t_i * n_ii) / (t_i + n_ij - n_ii)
  
     sum_k_t_k = get_pixel_area(eval_segm)
     
-    frequency_weighted_UI_ = np.sum(frequency_weighted_UI_) / sum_k_t_k
-    return frequency_weighted_UI_
+    frequency_weighted_IU_ = np.sum(frequency_weighted_IU_) / sum_k_t_k
+    return frequency_weighted_IU_
 
 '''
 Auxiliary functions used during evaluation.

@@ -254,12 +254,12 @@ class frequency_weighted_IU_UnitTests(unittest.TestCase):
     '''
     def test1dInput(self):
         mat = np.array([0])
-        self.assertRaises(IndexError, es.frequency_weighted_UI, mat, mat)
+        self.assertRaises(IndexError, es.frequency_weighted_IU, mat, mat)
 
     def testDiffDim(self):
         mat0 = np.array([[0,0], [0,0]])
         mat1 = np.array([[0,0,0], [0,0,0]])
-        self.assertRaisesRegexp(es.EvalSegErr, "DiffDim", es.frequency_weighted_UI, mat0, mat1)
+        self.assertRaisesRegexp(es.EvalSegErr, "DiffDim", es.frequency_weighted_IU, mat0, mat1)
 
     '''
     Correct inputs
@@ -268,28 +268,28 @@ class frequency_weighted_IU_UnitTests(unittest.TestCase):
         segm = np.array([[0,0], [0,0]])
         gt   = np.array([[0,0], [0,0]])
 
-        res = es.frequency_weighted_UI(segm, gt)
+        res = es.frequency_weighted_IU(segm, gt)
         self.assertEqual(res, 1.0)
 
     def testTwoClasses0(self):
         segm = np.array([[1,1,1,1,1], [1,1,1,1,1]])
         gt   = np.array([[0,0,0,0,0], [0,0,0,0,0]])
 
-        res = es.frequency_weighted_UI(segm, gt)
+        res = es.frequency_weighted_IU(segm, gt)
         self.assertEqual(res, 0)
 
     def testTwoClasses1(self):
         segm = np.array([[1,0,0,0,0], [0,0,0,0,0]])
         gt   = np.array([[0,0,0,0,0], [0,0,0,0,0]])
 
-        res = es.frequency_weighted_UI(segm, gt)
+        res = es.frequency_weighted_IU(segm, gt)
         self.assertEqual(res, (1.0/10.0)*(10.0*9.0/10.0))
 
     def testTwoClasses2(self):
         segm = np.array([[0,0,0,0,0], [0,0,0,0,0]])
         gt   = np.array([[1,0,0,0,0], [0,0,0,0,0]])
 
-        res = es.frequency_weighted_UI(segm, gt)
+        res = es.frequency_weighted_IU(segm, gt)
         # Almost equal!
         self.assertAlmostEqual(res, (1.0/10.0)*((9.0*9.0/10.0)+(1.0*0.0/1.0))) 
 
@@ -297,7 +297,7 @@ class frequency_weighted_IU_UnitTests(unittest.TestCase):
         segm = np.array([[0,0,0,0,0], [0,0,0,0,0]])
         gt   = np.array([[1,2,0,0,0], [0,0,0,0,0]])
 
-        res = es.frequency_weighted_UI(segm, gt)
+        res = es.frequency_weighted_IU(segm, gt)
         # Almost equal!
         self.assertAlmostEqual(res, (1.0/10.0)*((8.0*8.0/10.0)+(1.0*0.0/1.0)+(1.0*0.0/1.0)))
 
@@ -305,7 +305,7 @@ class frequency_weighted_IU_UnitTests(unittest.TestCase):
         segm = np.array([[0,2,0,0,0], [0,0,0,0,0]])
         gt   = np.array([[1,0,0,0,0], [0,0,0,0,0]])
 
-        res = es.frequency_weighted_UI(segm, gt)
+        res = es.frequency_weighted_IU(segm, gt)
         # Almost equal!
         self.assertAlmostEqual(res, (1.0/10.0)*((9.0*8.0/10.0)+(1.0*0.0/1.0)))
 
@@ -313,21 +313,21 @@ class frequency_weighted_IU_UnitTests(unittest.TestCase):
         segm = np.array([[0,2,3,0,0], [0,0,0,0,0]])
         gt   = np.array([[1,0,0,0,0], [0,0,0,0,0]])
 
-        res = es.frequency_weighted_UI(segm, gt)
+        res = es.frequency_weighted_IU(segm, gt)
         self.assertEqual(res, (1.0/10.0)*((9.0*7.0/10.0)+(1.0*0.0/1.0)))
 
     def testFourClasses1(self):
         segm = np.array([[1,2,3,0,0], [0,0,0,0,0]])
         gt   = np.array([[1,0,0,0,0], [0,0,0,0,0]])
 
-        res = es.frequency_weighted_UI(segm, gt)
+        res = es.frequency_weighted_IU(segm, gt)
         self.assertEqual(res, (1.0/10.0)*((9.0*7.0/9.0)+(1.0*1.0/1.0)))
 
     def testFiveClasses0(self):
         segm = np.array([[1,2,3,4,3], [0,0,0,0,0]])
         gt   = np.array([[1,0,3,0,0], [0,0,0,0,0]])
 
-        res = es.frequency_weighted_UI(segm, gt)
+        res = es.frequency_weighted_IU(segm, gt)
         self.assertEqual(res, (1.0/10.0)*((8.0*5.0/8.0)+(1.0*1.0/1.0)+(1.0*1.0/2.0)))
 
 
